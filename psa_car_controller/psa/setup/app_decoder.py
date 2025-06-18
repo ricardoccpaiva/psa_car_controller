@@ -14,8 +14,8 @@ from psa_car_controller.psacc.application.charge_control import ChargeControl, C
 
 logger = logging.getLogger(__name__)
 
-APP_VERSION = "1.48.2"
-GITHUB_USER = "flobz"
+APP_VERSION = "1.48.8"
+GITHUB_USER = "ricardoccpaiva"
 GITHUB_REPO = "psa_apk"
 TIMEOUT_IN_S = 10
 app = PSACarController()
