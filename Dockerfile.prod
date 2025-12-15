@@ -1,0 +1,56 @@
+# Multi-stage build for production
+
+# Stage 1: Build SvelteKit Frontend
+FROM node:22-slim AS frontend-builder
+
+WORKDIR /app/frontend
+
+# Copy frontend files
+COPY frontend/package*.json ./
+RUN npm ci
+
+COPY frontend/ ./
+RUN npm run build
+
+# Stage 2: Build Python Backend
+FROM python:3.11-slim AS backend
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python project files
+COPY pyproject.toml ./
+COPY psa_car_controller ./psa_car_controller
+
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install --no-dev
+
+# Copy built frontend from previous stage
+COPY --from=frontend-builder /app/frontend/build ./frontend/build
+
+# Expose Flask port
+EXPOSE 5000
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PSACC_PORT=5000
+ENV PSACC_HOST=0.0.0.0
+ENV PSACC_CONFIG_DIR=/config
+
+# Create config directory
+RUN mkdir -p /config
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:5000/get_vehicles || exit 1
+
+# Run the application using the new app
+CMD ["python", "-m", "psa_car_controller"]

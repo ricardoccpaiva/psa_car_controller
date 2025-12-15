@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Flask Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: psacc-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount source code for hot reload
+      - ./psa_car_controller:/app/psa_car_controller
+      - ./config:/app/config
+      - ./config.ini:/app/config.ini
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PSACC_CONFIG_DIR=/app/config
+      - PSACC_PORT=5000
+      - PSACC_HOST=0.0.0.0
+    networks:
+      - psacc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/get_vehicles"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # SvelteKit Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: psacc-frontend
+    ports:
+      - "5173:5173"  # Vite dev server
+    volumes:
+      # Mount source for hot reload
+      - ./frontend/src:/app/src
+      - ./frontend/static:/app/static
+      - ./frontend/package.json:/app/package.json
+      - ./frontend/svelte.config.js:/app/svelte.config.js
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tailwind.config.js:/app/tailwind.config.js
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      # Exclude node_modules to avoid conflicts
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    networks:
+      - psacc-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  psacc-network:
+    driver: bridge
