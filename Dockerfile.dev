@@ -27,5 +27,5 @@ ENV PYTHONPATH=/app
 ENV FLASK_APP=psa_car_controller.web.app_new
 ENV FLASK_ENV=development
 
-# Run the application
-CMD ["python", "-m", "psa_car_controller"]
+# Run the application with web-conf flag to allow starting without full config
+CMD ["python", "-m", "psa_car_controller", "--web-conf", "-l", "0.0.0.0", "-p", "5000"]
