@@ -146,10 +146,13 @@ def abrp():
     return jsonify(dict(APP.myp.abrp))
 
 
+# CORS is now handled globally by Flask-CORS in app_new.py
+# Keeping this as backup for legacy app.py
 @app.after_request
 def after_request(response):
-    header = response.headers
-    header['Access-Control-Allow-Origin'] = '*'
+    if not response.headers.get('Access-Control-Allow-Origin'):
+        header = response.headers
+        header['Access-Control-Allow-Origin'] = '*'
     return response
 
 
