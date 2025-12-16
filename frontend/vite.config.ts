@@ -4,13 +4,15 @@ import { defineConfig } from 'vite';
 export default defineConfig({
 	plugins: [sveltekit()],
 	server: {
-		host: '0.0.0.0',
+		host: true, // Listen on all addresses
 		port: 5173,
 		strictPort: true,
 		hmr: {
 			clientPort: 5173
-		},
-		// Allow all hosts in development (Docker, Proxmox, etc.)
-		allowedHosts: ['*']
+		}
+	},
+	preview: {
+		host: true,
+		port: 4173
 	}
 });
