@@ -2,6 +2,21 @@
 
 This directory contains the extracted OTP (One-Time Password) flow implementation for PSA car authentication.
 
+## Quick Start
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+
+# 2. Run interactive example
+python example_usage.py
+
+# Or use direct commands:
+python example_usage.py setup      # First time setup
+python example_usage.py generate   # Generate OTP code
+python example_usage.py info       # View session info
+```
+
 ## Overview
 
 The PSA OTP flow is used to generate one-time passwords for authenticating remote control commands to PSA vehicles (Peugeot, Citroën, DS, Opel, Vauxhall).

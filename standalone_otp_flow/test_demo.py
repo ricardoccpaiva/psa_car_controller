@@ -6,9 +6,24 @@ This script demonstrates the OTP flow API without requiring actual SMS codes.
 It shows the structure and usage patterns.
 
 Note: This will not work with fake data - it's for demonstration purposes only.
+
+Requirements:
+    pip install -r requirements.txt
 """
 
-from otp import Otp, new_otp_session, load_otp, save_otp, ConfigException
+import sys
+
+# Check for required dependencies
+try:
+    from otp import Otp, new_otp_session, load_otp, save_otp, ConfigException
+except ModuleNotFoundError as e:
+    print(f"✗ Error: Missing required dependency: {e.name}")
+    print("\nPlease install dependencies first:")
+    print("  pip install -r requirements.txt")
+    print("\nRequired packages:")
+    print("  - pycryptodomex>=3.9.0")
+    print("  - requests>=2.25.0")
+    sys.exit(1)
 
 
 def demo_flow_structure():

@@ -4,7 +4,11 @@ from time import time
 
 from Cryptodome.Cipher import AES
 
-from .tokenizer import Tokenizer
+# Support both package and standalone usage
+try:
+    from .tokenizer import Tokenizer
+except ImportError:
+    from tokenizer import Tokenizer
 
 DEFAULT_TOKEN = "0.2.11&&&&&&0&&0&&0&&9f13ba238fbabba08e85d93638e98ef5e48682a9d3e5bc325c3dd6fac8199a6ce09e9b4f373aa6a" \
                 "75a905c3d690f6e3335d1e8e5b748ecec3020a794149033f6ada6896db6d73b8d43b8365bbe15b9ac66f49d4e684a3628f1e" \

@@ -11,8 +11,13 @@ from Cryptodome.Cipher import AES
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Hash import SHA256
 
-from . import oaep
-from .load import IWData
+# Support both package and standalone usage
+try:
+    from . import oaep
+    from .load import IWData
+except ImportError:
+    import oaep
+    from load import IWData
 
 # pylint: disable=invalid-name
 CONFIG_NAME = "otp.bin"
