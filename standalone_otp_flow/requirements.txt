@@ -1,0 +1,7 @@
+# PSA OTP Flow - Dependencies
+
+# Cryptography library for RSA-OAEP and AES
+pycryptodomex>=3.9.0
+
+# HTTP requests for API communication
+requests>=2.25.0
